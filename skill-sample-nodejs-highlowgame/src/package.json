@@ -1,7 +1,7 @@
 {
-  "name": "skill-sample-nodejs-highlowgame",
+  "name": "skill-nodejs-countrycapitalgame",
   "version": "1.0.0",
-  "description": "High-low number guessing game for Alexa",
+  "description": "Country-Capital guessing game for Alexa",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -15,7 +15,7 @@
     "game",
     "skill"
   ],
-  "author": "Amazon.com",
+  "author": "Arya & Nila (ArNi)",
   "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/alexa/skill-sample-nodejs-highlowgame/issues"
