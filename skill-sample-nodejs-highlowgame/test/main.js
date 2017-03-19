@@ -44,6 +44,12 @@ function context() {
 }
 
 AWS.config.region = region;
+AWS.config.update({
+    accessKeyId: "AKIAIPSBDKR5BTPX45HA",
+    secretAccessKey: "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",
+    "region": region 
+});
+
 var sts = new AWS.STS();
 sts.assumeRole({
     RoleArn: roleArn,
@@ -53,6 +59,7 @@ sts.assumeRole({
         console.log('Cannot assume role');
         console.log(err, err.stack);
     } else { // successful response
+    	console.log('successful response');
         AWS.config.update({
             accessKeyId: data.Credentials.AccessKeyId,
             secretAccessKey: data.Credentials.SecretAccessKey,

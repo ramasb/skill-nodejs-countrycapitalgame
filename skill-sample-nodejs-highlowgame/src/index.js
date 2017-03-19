@@ -1,11 +1,11 @@
 'use strict';
 var Alexa = require("alexa-sdk");
-var appId = ''; //'amzn1.echo-sdk-ams.app.your-skill-id';
+var appId = 'amzn1.ask.skill.5a279ae4-0328-4dd4-8f23-fb75adabf506'; //'amzn1.echo-sdk-ams.app.your-skill-id';
 
 exports.handler = function(event, context, callback) {
     var alexa = Alexa.handler(event, context);
     alexa.appId = appId;
-    alexa.dynamoDBTableName = 'countryCapitals';
+    alexa.dynamoDBTableName = 'CountryCapitalSkillTable';
     alexa.registerHandlers(newSessionHandlers, guessModeHandlers, startGameHandlers, guessAttemptHandlers);
     alexa.execute();
 };
@@ -94,10 +94,7 @@ var guessModeHandlers = Alexa.CreateStateHandler(states.GUESSMODE, {
         console.log('user guessed: ' + capital);
         if(capital == oCapital){
             // With a callback, use the arrow function to preserve the correct 'this' context
-            this.emit('CapitalRight', () => {
-                this.emit(':ask', capital + 'is correct! Would you like to play a new game?',
-                'Say yes to start a new game, or no to end the game.');
-            });
+            this.emit('CapitalRight');
         } else {
             this.emit('CapitalWrong');
         }
@@ -113,7 +110,7 @@ var guessModeHandlers = Alexa.CreateStateHandler(states.GUESSMODE, {
     "AMAZON.StopIntent": function() {
         console.log("STOPINTENT");
         this.emit(':tell', "You have won" + this.attributes['guessWon'] + " out of " + this.attributes['guessPlayed'] + " games played!");  
-      this.emit(':tell', "Goodbye!");  
+        this.emit(':tell', "Goodbye!");  
     },
     "AMAZON.CancelIntent": function() {
         console.log("CANCELINTENT");
@@ -131,10 +128,12 @@ var guessModeHandlers = Alexa.CreateStateHandler(states.GUESSMODE, {
 
 // These handlers are not bound to a state
 var guessAttemptHandlers = {
-    'CapitalRight': function(callback) {
+    'CapitalRight': function() {
+    	this.emit(':ask', capital + 'is correct! Would you like to play a new game?',
+        'Say yes to start a new game, or no to end the game.');
         this.handler.state = states.STARTMODE;
         this.attributes['guessWon']++;
-        callback();
+        //callback();
     },
     'CapitalWrong': function() {
         this.emit(':ask', 'Sorry, wrong answer.', 'Try saying again.');

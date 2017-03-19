@@ -5,7 +5,7 @@
       "applicationId" : "amzn1.ask.skill.5a279ae4-0328-4dd4-8f23-fb75adabf506"	  
     },
     "user": {
-      "userId": "amzn1.ask.account.debugUser"
+      "userId": "amzn1.ask.account.testaccount1"
     },
     "new": true
   },
