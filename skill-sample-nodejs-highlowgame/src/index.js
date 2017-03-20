@@ -95,6 +95,12 @@ var guessModeHandlers = Alexa.CreateStateHandler(states.GUESSMODE, {
         if(capital == oCapital){
             // With a callback, use the arrow function to preserve the correct 'this' context
             this.emit('CapitalRight');
+            /*
+            this.emit('CapitalRight', () => {
+                this.emit(':ask', capital + 'is correct! Would you like to play a new game?',
+                'Say yes to start a new game, or no to end the game.');
+            });
+            */
         } else {
             this.emit('CapitalWrong');
         }
