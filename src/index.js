@@ -2,10 +2,13 @@
 var Alexa = require("alexa-sdk");
 var appId = 'amzn1.ask.skill.5a279ae4-0328-4dd4-8f23-fb75adabf506'; //'amzn1.echo-sdk-ams.app.your-skill-id';
 
+var skillName = "Hi";
+var welcomeMessage = "Welcome to Country Capital Game";
 exports.handler = function(event, context, callback) {
     var alexa = Alexa.handler(event, context);
     alexa.appId = appId;
-    alexa.dynamoDBTableName = 'CountryCapitalSkillTable';
+    //alexa.dynamoDBTableName = 'CountryCapitalSkillTable';
+    //alexa.registerHandlers(newSessionHandlers);
     alexa.registerHandlers(newSessionHandlers, guessModeHandlers, startGameHandlers, guessAttemptHandlers);
     alexa.execute();
 };
@@ -16,7 +19,7 @@ var states = {
 };
 
 var newSessionHandlers = {
-    'NewSession': function() {
+    'LaunchRequest': function() {
         if(Object.keys(this.attributes).length === 0) {
             this.attributes['endedSessionCount'] = 0;
             this.attributes['guessPlayed'] = 0;
@@ -26,6 +29,19 @@ var newSessionHandlers = {
         this.emit(':ask', 'Welcome to Country-Capital guessing game. You have played '
             + this.attributes['guessPlayed'].toString() + ' times. would you like to play?',
             'Say yes to start the game or no to quit.');
+    },
+    'NewSession': function () {
+        this.handler.state = states.STARTMODE;
+        this.emit(':ask', skillName + " " + welcomeMessage, welcomeMessage);
+    },
+    'AMAZON.YesIntent': function() {
+    	this.attributes['guessPlayed']++;
+    	var country = "India";
+    	var capital = "New Delhi";
+        this.attributes["country"] = country;
+        this.attributes["capital"] = capital;
+        this.handler.state = states.GUESSMODE;
+        this.emit(':ask', 'Great! ' + 'What is the capital for ' + this.attributes["country"] + '?', 'Capital.');
     },
     "AMAZON.StopIntent": function() {
       this.emit(':tell', "Goodbye!");  
@@ -37,6 +53,10 @@ var newSessionHandlers = {
         console.log('session ended!');
         //this.attributes['endedSessionCount'] += 1;
         this.emit(":tell", "Goodbye!");
+    },
+    'Unhandled': function() {
+        console.log("UNHANDLED");
+        this.emit(':ask', 'Do you want to start a game.');
     }
 };
 
@@ -128,7 +148,7 @@ var guessModeHandlers = Alexa.CreateStateHandler(states.GUESSMODE, {
     },
     'Unhandled': function() {
         console.log("UNHANDLED");
-        this.emit(':ask', 'Sorry, I didn\'t get that. Try saying the capital again.', 'Try saying a capital.');
+        this.emit(':ask', 'Sorry, I didn\'t get that. Try saying the capital again.', 'Try saying a capital for the country.');
     }
 });
 
@@ -141,10 +161,17 @@ var guessAttemptHandlers = {
         this.attributes['guessWon']++;
         //callback();
     },
+    "AMAZON.YesIntent": function() {
+        this.emit(':tell', "Yes Intent!");  
+    },
     'CapitalWrong': function() {
         this.emit(':ask', 'Sorry, wrong answer.', 'Try saying again.');
     },
     'Wrong': function() {
         this.emit(':ask', 'Sorry, I didn\'t get that. Try saying again.', 'Try saying again.');
+    },
+    'Unhandled': function() {
+        console.log("UNHANDLED");
+        this.emit(':ask', 'Sorry, I didn\'t get that. Try saying the capital again.', 'Try saying a capital.');
     }
 };

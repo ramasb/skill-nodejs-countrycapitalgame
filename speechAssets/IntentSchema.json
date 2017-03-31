@@ -1,6 +1,6 @@
 {"intents": [
-    {"intent": "CapitalGuessIntent", "slots": [{"name": "capital", "type": "string"}]},
-    {"intent": "AMAZON.ClueIntent"},
+    {"intent": "CapitalGuessIntent", "slots": [{"name": "Capital", "type": "AMAZON.US_CITY"}]},
+    {"intent": "ClueIntent"},
     {"intent": "AMAZON.YesIntent"},
     {"intent": "AMAZON.NoIntent"},
     {"intent": "AMAZON.HelpIntent"},
